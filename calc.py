@@ -1,6 +1,9 @@
 def add(a, b):
     return a + b
 
+def subtraction(a, b):
+    return a - b
+
 def main():
     print("Calculator Program")
     print("\n")
