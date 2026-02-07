@@ -1,4 +1,5 @@
 from multiprocessing import Process
+import time
 
 def compute_gwa_mp(grades):
     gwa = sum(grades) / len(grades)
@@ -21,11 +22,17 @@ processes = []
 for grade in grades_list:
     p = Process(target=compute_gwa_mp, args=([grade],))
     processes.append(p)
+    start_time = time.time_ns()
     p.start()
 
 for p in processes:
     p.join()
+    end_time = time.time_ns()
+
+execution_time = end_time - start_time
+ns_to_s = execution_time / 1000000000
 
 if grades_list:
     overall_gwa = sum(grades_list) / len(grades_list)
     print(f"\n[Main Process] Overall GWA: {overall_gwa:.2f}")
+    print(f"Execution Time is {execution_time} nanoseconds, and {ns_to_s} in seconds")
