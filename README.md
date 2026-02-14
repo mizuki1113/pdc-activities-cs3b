@@ -50,3 +50,10 @@ Execution time measurement was integrated directly into both multithreading and 
 
 1. **Task vs Data Parallelism**
 Task Parallelism means different tasks run at the same time — Part A shows this because each deduction type (SSS, PhilHealth, etc.) is a separate function running concurrently on the same salary. Data Parallelism means the same task runs on different data simultaneously — Part B shows this because one payroll function is applied to all five employees at the same time.
+
+2. **How concurrent.futures manages execution**
+submit() schedules a single callable and returns a Future object that holds the result once it’s done. map() is a cleaner way to apply one function across multiple inputs in parallel. Future lets you retrieve results asynchronously using .result(). The with statement is used so the executor automatically shuts down and cleans up threads/processes after the block finishes — no manual cleanup needed.
+
+3. **ThreadPoolExecutor and the GIL**
+No, true parallelism didn’t occur. Python’s GIL only allows one thread to execute Python bytecode at a time, so threads take turns rather than truly running side by side. ThreadPoolExecutor works well for I/O-bound tasks, but since deduction calculations are CPU-bound, threads don’t really speed things up — they just run concurrently, not in parallel.
+
