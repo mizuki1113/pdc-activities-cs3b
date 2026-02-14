@@ -57,3 +57,5 @@ submit() schedules a single callable and returns a Future object that holds the 
 3. **ThreadPoolExecutor and the GIL**
 No, true parallelism didn’t occur. Python’s GIL only allows one thread to execute Python bytecode at a time, so threads take turns rather than truly running side by side. ThreadPoolExecutor works well for I/O-bound tasks, but since deduction calculations are CPU-bound, threads don’t really speed things up — they just run concurrently, not in parallel.
 
+4. **Why ProcessPoolExecutor enables true parallelism**
+Each process gets its own memory space and its own GIL, so multiple processes can run Python code at the exact same time across multiple CPU cores. Since they don’t share memory, there’s no GIL bottleneck. This makes ProcessPoolExecutor the right choice for CPU-bound tasks like payroll computations.
