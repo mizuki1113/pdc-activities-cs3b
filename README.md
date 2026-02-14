@@ -59,3 +59,9 @@ No, true parallelism didn’t occur. Python’s GIL only allows one thread to ex
 
 4. **Why ProcessPoolExecutor enables true parallelism**
 Each process gets its own memory space and its own GIL, so multiple processes can run Python code at the exact same time across multiple CPU cores. Since they don’t share memory, there’s no GIL bottleneck. This makes ProcessPoolExecutor the right choice for CPU-bound tasks like payroll computations.
+
+5. **Scalability from 5 to 10,000 employees**
+ProcessPoolExecutor (Part B) scales better. Since it uses data parallelism, you’re just applying the same function to more data — you can distribute the workload across CPU cores efficiently. ThreadPoolExecutor (Part A) would struggle because of the GIL, and spawning thousands of threads isn’t ideal either. For 10,000 employees, process-based parallelism with chunked data would be far more efficient.
+
+6. **Real-world payroll system example**
+In a real payroll system, Task Parallelism would be used when processing one employee’s paycheck; running tax computation, benefits deduction, and bank transfer simultaneously using ThreadPoolExecutor (especially the bank transfer since it’s I/O-bound). Data Parallelism would be used at the end of the month when computing salaries for all employees at once, the same payroll function runs across thousands of records using 
