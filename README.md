@@ -45,3 +45,8 @@ Execution time measurement was integrated directly into both multithreading and 
 
 6. **How did your group apply creative coding or algorithmic solutions in this lab?**  
    The group integrated execution time measurement directly into each implementation and used structured user input handling to make the programs more efficient and readable.
+
+## Lab 3 Questions
+
+1. **Task vs Data Parallelism**
+Task Parallelism means different tasks run at the same time — Part A shows this because each deduction type (SSS, PhilHealth, etc.) is a separate function running concurrently on the same salary. Data Parallelism means the same task runs on different data simultaneously — Part B shows this because one payroll function is applied to all five employees at the same time.
