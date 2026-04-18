@@ -1,5 +1,11 @@
 # pdc-activities-cs3b
 
+**Members:**
+- Precious Gamalo
+- Keissha Louise Canios
+- Vince Christian Carabanes
+- Josh Andrie de Ramas
+
 ---
 
 ## Lab 2 – Exploring Multithreading and Multiprocessing in Python
@@ -52,16 +58,16 @@ Execution time measurement was integrated directly into both multithreading and 
 Task Parallelism means different tasks run at the same time — Part A shows this because each deduction type (SSS, PhilHealth, etc.) is a separate function running concurrently on the same salary. Data Parallelism means the same task runs on different data simultaneously — Part B shows this because one payroll function is applied to all five employees at the same time.
 
 2. **How concurrent.futures manages execution**
-submit() schedules a single callable and returns a Future object that holds the result once it’s done. map() is a cleaner way to apply one function across multiple inputs in parallel. Future lets you retrieve results asynchronously using .result(). The with statement is used so the executor automatically shuts down and cleans up threads/processes after the block finishes — no manual cleanup needed.
+submit() schedules a single callable and returns a Future object that holds the result once it's done. map() is a cleaner way to apply one function across multiple inputs in parallel. Future lets you retrieve results asynchronously using .result(). The with statement is used so the executor automatically shuts down and cleans up threads/processes after the block finishes — no manual cleanup needed.
 
 3. **ThreadPoolExecutor and the GIL**
-No, true parallelism didn’t occur. Python’s GIL only allows one thread to execute Python bytecode at a time, so threads take turns rather than truly running side by side. ThreadPoolExecutor works well for I/O-bound tasks, but since deduction calculations are CPU-bound, threads don’t really speed things up — they just run concurrently, not in parallel.
+No, true parallelism didn't occur. Python's GIL only allows one thread to execute Python bytecode at a time, so threads take turns rather than truly running side by side. ThreadPoolExecutor works well for I/O-bound tasks, but since deduction calculations are CPU-bound, threads don't really speed things up — they just run concurrently, not in parallel.
 
 4. **Why ProcessPoolExecutor enables true parallelism**
-Each process gets its own memory space and its own GIL, so multiple processes can run Python code at the exact same time across multiple CPU cores. Since they don’t share memory, there’s no GIL bottleneck. This makes ProcessPoolExecutor the right choice for CPU-bound tasks like payroll computations.
+Each process gets its own memory space and its own GIL, so multiple processes can run Python code at the exact same time across multiple CPU cores. Since they don't share memory, there's no GIL bottleneck. This makes ProcessPoolExecutor the right choice for CPU-bound tasks like payroll computations.
 
 5. **Scalability from 5 to 10,000 employees**
-ProcessPoolExecutor (Part B) scales better. Since it uses data parallelism, you’re just applying the same function to more data — you can distribute the workload across CPU cores efficiently. ThreadPoolExecutor (Part A) would struggle because of the GIL, and spawning thousands of threads isn’t ideal either. For 10,000 employees, process-based parallelism with chunked data would be far more efficient.
+ProcessPoolExecutor (Part B) scales better. Since it uses data parallelism, you're just applying the same function to more data — you can distribute the workload across CPU cores efficiently. ThreadPoolExecutor (Part A) would struggle because of the GIL, and spawning thousands of threads isn't ideal either. For 10,000 employees, process-based parallelism with chunked data would be far more efficient.
 
 6. **Real-world payroll system example**
-In a real payroll system, Task Parallelism would be used when processing one employee’s paycheck; running tax computation, benefits deduction, and bank transfer simultaneously using ThreadPoolExecutor (especially the bank transfer since it’s I/O-bound). Data Parallelism would be used at the end of the month when computing salaries for all employees at once, the same payroll function runs across thousands of records using 
+In a real payroll system, Task Parallelism would be used when processing one employee's paycheck; running tax computation, benefits deduction, and bank transfer simultaneously using ThreadPoolExecutor (especially the bank transfer since it's I/O-bound). Data Parallelism would be used at the end of the month when computing salaries for all employees at once, the same payroll function runs across thousands of records using ProcessPoolExecutor.
