@@ -22,4 +22,4 @@ Overall, what I took away from this is that parallelism is a tool, not a default
 
 
 ## de Ramas, Josh Andrie
-
+The implementations highlight that sequential algorithms are simpler and more efficient for smaller datasets due to their single-flow execution and minimal overhead, as seen in sequential_search.py and sequential_sort.py. In contrast, the parallel versions (parallel_search.py and parallel_sort.py) divide tasks across multiple processes, improving performance for larger datasets but introducing overhead from process creation, communication, and synchronization. This overhead often makes parallel search less efficient for small inputs, while parallel sorting shows clearer benefits as dataset size increases. Challenges such as proper data partitioning, result aggregation, and merging sorted chunks emphasize the added complexity of parallelism. Overall, the results confirm that parallel algorithms are not always faster and are most effective only when the computational workload is large enough to outweigh coordination costs.
