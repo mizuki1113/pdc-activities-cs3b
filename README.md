@@ -1,10 +1,10 @@
 # pdc-activities-cs3b
 
 **Members:**
-- Precious Gamalo
-- Keissha Louise Canios
-- Vince Christian Carabanes
-- Josh Andrie de Ramas
+- Precious Gamalo - mizuki1113
+- Keissha Louise Canios - Hiyashinsuuu
+- Vince Christian Carabanes - B1ns0y
+- Josh Andrie de Ramas - Zentexesus
 
 ---
 
