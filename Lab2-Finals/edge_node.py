@@ -40,4 +40,4 @@ def run_edge_node_with_duplicates(node_id="node-1"):
         time.sleep(random.uniform(1, 3))
 
 if __name__ == "__main__":
-    run_edge_node_with_duplicates(node_id="node-josh")
+    run_edge_node(node_id="node-josh")
