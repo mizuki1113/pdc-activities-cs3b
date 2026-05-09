@@ -10,7 +10,7 @@ SUBSCRIPTION_ID = "vote-sub"
 
 subscriber = pubsub_v1.SubscriberClient()
 subscription_path = subscriber.subscription_path(PROJECT_ID, SUBSCRIPTION_ID)
-db = firestore.Client()
+db = firestore.Client(database="pdc5econd1abact")  # using your actual database name
 
 def process_vote(message):
     try:

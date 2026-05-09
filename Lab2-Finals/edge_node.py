@@ -3,7 +3,7 @@ import uuid
 import random
 import time
 
-API_URL = "https://vote-api-739178332753.asia-southeast1.run.app"  
+API_URL = "https://vote-api-739178332753.asia-southeast1.run.app/vote"  
 
 def generate_vote(node_id):
     return {
@@ -39,5 +39,5 @@ def run_edge_node_with_duplicates(node_id="node-1"):
             send_vote(vote)
         time.sleep(random.uniform(1, 3))
 
-if _name_ == "_main_":
-    run_edge_node(node_id="node-josh")
+if __name__ == "__main__":
+    run_edge_node_with_duplicates(node_id="node-josh")
