@@ -6,10 +6,75 @@ A distributed voting system built on GCP using an edge-to-cloud pipeline:
 
 **Edge Nodes → Cloud Run API → Pub/Sub → Worker Service → Firestore**
 
-## Architecture
+## System Architecture
 
-Edge nodes generate votes independently and send them via HTTP to the Cloud Run API. The API validates and publishes votes to a Pub/Sub topic. A worker service subscribes and processes messages, writing results to Firestore using idempotent document IDs.
+```
+                        DISTRIBUTED VOTING SYSTEM
+                        ─────────────────────────
 
+  EDGE LAYER                    CLOUD LAYER
+  ──────────                    ───────────
+
+┌─────────────────┐            ┌─────────────────┐
+│  Edge Node      │            │                 │
+│  (node-keissha) │──────────▶ │  Cloud Run API  │
+└─────────────────┘            │   (vote-api)    │
+                               │                 │
+┌─────────────────┐            │  POST /vote     │
+│  Edge Node      │──────────▶ │  - validates    │
+│  (node-josh)    │            │  - publishes    │
+└─────────────────┘            └────────┬────────┘
+                                        │
+┌─────────────────┐                     │ publish
+│  Edge Node      │──────────▶          ▼
+│  (node-vince)   │            ┌─────────────────┐
+└─────────────────┘            │                 │
+                               │     Pub/Sub     │
+┌─────────────────┐            │  (vote-topic)   │
+│  Edge Node      │──────────▶ │  (vote-sub)     │
+│  (node-precious)│            │                 │
+└─────────────────┘            │  - buffers      │
+                               │  - retries      │
+                               └────────┬────────┘
+                                        │
+                                        │ subscribe
+                                        ▼
+                               ┌─────────────────┐
+                               │                 │
+                               │  Worker Service │
+                               │  (vote-worker)  │
+                               │                 │
+                               │  - processes    │
+                               │  - deduplicates │
+                               │  - writes       │
+                               └────────┬────────┘
+                                        │
+                                        │ store
+                                        ▼
+                               ┌─────────────────┐
+                               │                 │
+                               │    Firestore    │
+                               │  (votes collection)│
+                               │                 │
+                               │  doc_id:        │
+                               │  user_id_poll_id│
+                               └─────────────────┘
+
+  DATA FLOW
+  ─────────
+  1. Edge nodes generate votes independently
+  2. Votes sent via HTTP POST to Cloud Run API
+  3. API validates and publishes to Pub/Sub topic
+  4. Worker subscribes and pulls messages from Pub/Sub
+  5. Worker writes to Firestore using idempotent doc ID
+
+  FAULT TOLERANCE
+  ───────────────
+  - API goes down     → Edge nodes retry automatically
+  - Worker goes down  → Pub/Sub buffers all messages
+  - Duplicate votes   → Idempotency key prevents duplicates
+  - Worker restored   → Queued messages auto-process
+```
 ---
 
 ## Individual Reflections
